@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { User, UserStore } from '../models/user';
-import verifyAuthToken from './authorizeMiddleware';
+import verifyAuthToken from '../middleware/authorize';
 
 const store = new UserStore();
 
@@ -21,38 +21,59 @@ const create = async (req: Request, res: Response) => {
     lastName: req.body.lastName,
     password: req.body.password
   }
-  try {
-    const newUser = await store.create(user);
-    var token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET as string);
-    res.json(token);
-  } catch (err) {
-    res.status(400);
-    res.json(err);
+  if(req.body.firstName && req.body.lastName && req.body.password) {
+    try {
+      const newUser = await store.create(user);
+      const payload = {
+        id: newUser.id,
+        firstName: newUser.firstName
+      }
+      var token = jwt.sign({ user: payload }, process.env.TOKEN_SECRET as string);
+      res.json(token);
+    } catch (err) {
+      res.status(400);
+      res.json(err);
+    }
+  } else {
+    res.json('Please provide all your sign up details');
   }
 };
 
 const destroy = async (req: Request, res: Response) => {
     const user: User = await store.delete(req.params.id);
-    res.json(user);
+    if(user) {
+      res.json(user);
+    } else {
+      res.json('Specified user has already been deleted or does not exist yet');
+    }
 }
 
 const authenticate = async (req: Request, res: Response) => {
   const user: User = {
+    id: req.body.id,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     password: req.body.password
-  };
-  try {
-    const u = await store.authenticate(
-      user.firstName,
-      user.lastName,
-      user.password
-    );
-    var token = jwt.sign({ user: u }, process.env.TOKEN_SECRET as string);
-    res.json(token);
-  } catch (err) {
-    res.status(401);
-    res.json({ err });
+  }
+  if(req.body.firstName && req.body.lastName && req.body.password) {
+    try {
+      const u = await store.authenticate(user);
+      if(u !== null) {
+        const payload = {
+          id: u.id,
+          firstName: u.firstName
+        }
+        var token = jwt.sign({ user: payload }, process.env.TOKEN_SECRET as string);
+        res.json(token);
+      } else {
+        res.json('Sign in failed! Please provide valid credentials');
+      }
+    } catch (err) {
+      res.status(401);
+      res.json({ err });
+    }
+  } else {
+    res.json('Please provide all your login information');
   }
 };
 
