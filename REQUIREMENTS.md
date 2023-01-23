@@ -5,37 +5,48 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 #### Products
-- Index 
-- Show (args: product id)
-- Create (args: Product)[token required]
-- [OPTIONAL] Top 5 most popular products 
-- [OPTIONAL] Products by category (args: product category)
+- **Index** <code>/products</code> [GET]
+- **Show** <code>/products/:id</code> (args: product id) [GET]
+- **Create** <code>/products</code> (args: name, price, category) [POST] [Token Required]
+- **Update** <code>/products/:id</code> (args: id, name, price, category) [PUT] [Token Required]
+- **Destroy** <code>/products/:id</code> (args: id) [DELETE] [Token Required]
 
 #### Users
-- Index [token required]
-- Show (args: id)[token required]
-- Create (args: User)[token required]
+- **Index** <code>/users</code> [GET] [Token Required]
+- **Show** <code>/users/:id</code> (args: product id) [GET] [Token Required]
+- **Create** <code>/users</code> (args: firstName, lastName, password) [POST] [Token Required]
+- **Destroy** <code>/users/:id</code> (args: id) [DELETE] [Token Required]
+- **Authenticate** <code>/users/signin</code> (args: firstName, lastName, password) [POST] [Token Required]
 
 #### Orders
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+- **Index** <code>/orders</code> [GET] [Token Required]
+- **Show** <code>/orders/:id</code> (args: id) [GET] [Token Required]
+- **Create** <code>/orders</code> (args: order_status) [POST] [Token Required]
+- **Update** <code>/orders/:id</code> (args: id) [PUT] [Token Required]
+- **Add Product** <code>/orders/product</code> (args: order_id, product_id, product_quantity) [POST] [Token Required]
+- **Current Order** <code>/orders/current</code> [GET] [Token Required]
+- **Completed Orders** <code>/orders/complete</code> [GET] [Token Required]
 
 ## Data Shapes
 #### Product
--  id
-- name
-- price
-- [OPTIONAL] category
+-  **id** integer
+- **name** string
+- **price** float
+- **category** string
 
 #### User
-- id
-- firstName
-- lastName
-- password
+- **id** integer
+- **firstName** string
+- **lastName** string
+- **password_digest** string
 
 #### Orders
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
+- **id** integer
+- **user_id** integer [foreign key]
+- **status of order (active or complete)** string
+
+#### Orders Product
+- **id** integer
+- **product_id** integer [foreign key]
+- **product_quantity** integer
+- **order_id** integer [foreign key]
