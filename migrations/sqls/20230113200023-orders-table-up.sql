@@ -1,7 +1,6 @@
 CREATE TABLE orders (
-    CONSTRAINT product_id FOREIGN KEY(id) REFERENCES products(id),
-    product_quantity integer,
-    CONSTRAINT user_id FOREIGN KEY(id) REFERENCES users(id),
+    user_id integer,
     order_status VARCHAR(32),
-    id SERIAL PRIMARY KEY
+    id SERIAL PRIMARY KEY,
+    FOREIGN KEY(user_id) REFERENCES users(id)
 );
