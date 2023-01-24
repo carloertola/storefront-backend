@@ -16,7 +16,8 @@ const index = async (_req: Request, res: Response) => {
 
 const show = async (req: Request, res: Response) => {
   const userId = res.locals.jwtPayload.user.id;
-  const order = await store.show(req.params.id, userId);
+  const orderId = req.params.id;
+  const order = await store.show(orderId, userId);
   if(order) {
     res.json(order);
   } else {
@@ -70,10 +71,14 @@ const addProduct = async (req: Request, res: Response) => {
 }
 
 const currentOrder = async (_req: Request, res: Response) => {
-  const user_id = res.locals.jwtPayload.user.id;
+  const userId = res.locals.jwtPayload.user.id;
   try {
-    const currentOrders = await store.currentOrder(user_id);
-    res.json(currentOrders[-1]);
+    const currentOrder = await store.currentOrder(userId);
+    if(currentOrder) {
+      res.json(currentOrder);
+    } else {
+      res.json('No active orders');
+    }
   } catch (err) {
     res.status(401);
     res.json(`Couldn't retrieve current order. Error: ${err}`)
@@ -84,7 +89,11 @@ const completedOrders = async (_req: Request, res: Response) => {
   const user_id = res.locals.jwtPayload.user.id;
   try {
     const completeOrders = await store.completedOrders(user_id);
-    res.json(completeOrders);
+    if(completeOrders) {
+      res.json(completeOrders);
+    } else {
+      res.json('No completed orders just yet')
+    }
   } catch (err) {
     res.status(401);
     res.json(`Could not retrieve completed orders. Error: ${err}`);
@@ -97,8 +106,8 @@ const order_routes = (app: express.Application) => {
   app.post('/orders', verifyAuthToken, create);
   app.put('/orders/:id', verifyAuthToken, update);
   app.post('/orders/product', verifyAuthToken, addProduct);
-  app.get('/orders/current', verifyAuthToken, currentOrder);
-  app.get('/orders/complete', verifyAuthToken, completedOrders);
+  app.get('/ordersCurrent', verifyAuthToken, currentOrder);
+  app.get('/ordersComplete', verifyAuthToken, completedOrders);
 }
 
 export default order_routes;
