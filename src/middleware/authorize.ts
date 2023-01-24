@@ -7,7 +7,6 @@ const verifyAuthToken = (req: Request, res: Response, next: NextFunction) => {
     const token: string = authorizationHeader
       ? authorizationHeader.split(' ')[1] : '';
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET as string);
-    console.log(decoded);
     res.locals.jwtPayload = decoded;
     next();
   } catch (error) {
