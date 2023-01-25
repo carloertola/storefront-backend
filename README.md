@@ -46,8 +46,3 @@ We'll be using modules like typescript, pg, jsonwebtoken, db-migrate, body-parse
 - To run tests use <code>npm run test</code>
 
 For more details about the project scope, tables, API routes, and data shapes of this project check out the <a href='/REQUIREMENTS.md'>REQUIREMENTS.md</a>
-
-### Creating a New User
-To start off using the API you'll need to create at least one new user without the authentication middleware getting in the way.
-
-To create the first user go to the **handlers** folder in the **users.ts** file and remove the middleware from the create route just to create the first user. After that you should be able to use the token generated for that first user to create other users, products, orders.
