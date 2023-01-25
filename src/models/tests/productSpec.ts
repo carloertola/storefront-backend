@@ -2,7 +2,7 @@ import { Product, ProductStore } from '../product';
 
 const store = new ProductStore()
 
-describe("Product Model Methods Existence", () => {
+describe("Product Model", () => {
     it("should have an index method", () => {
         expect(store.index).toBeDefined();
     });
@@ -21,5 +21,64 @@ describe("Product Model Methods Existence", () => {
 
     it("should have a delete method", () => {
         expect(store.delete).toBeDefined();
+    });
+
+    it("create method should add a product", async () => {
+        const result = await store.create({
+            name: 'full stack javascript course',
+            price: 400.00,
+            category: 'udacity courses'
+        });
+        expect(result).toEqual({
+            id: '1',
+            name: 'full stack javascript course',
+            price: 400.00,
+            category: 'udacity courses'
+        });
+    });
+
+    it("index method should return a list of products", async () => {
+        const result = await store.index();
+        expect(result).toEqual([{
+            id: '1',
+            name: 'full stack javascript course',
+            price: 400.00,
+            category: 'udacity courses'
+        }]);
+    });
+
+    it("show method should return an existing product", async () => {
+        const result = await store.show('1');
+        expect(result).toEqual({
+            id: '1',
+            name: 'full stack javascript course',
+            price: 400.00,
+            category: 'udacity courses'
+        });
+    });
+
+    it("update method should return a modified product", async () => {
+        const result = await store.update({
+            id: '1',
+            name: 'heuristic full stack development',
+            price: 600.00,
+            category: 'self-learning courses'
+        });
+        expect(result).toEqual({
+            id: '1',
+            name: 'heuristic full stack development',
+            price: 600.00,
+            category: 'self-learning courses'
+        });
+    });
+
+    it("delete method should return the deleted product", async () => {
+        const result = await store.delete('1');
+        expect(result).toEqual({
+            id: '1',
+            name: 'heuristic full stack development',
+            price: 600.00,
+            category: 'self-learning courses'
+        });
     });
 });
