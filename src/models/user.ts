@@ -1,7 +1,6 @@
 // @ts-ignore
 import sql from '../database';
 import bcrypt from 'bcrypt';
-import { ucs2 } from 'punycode';
 
 const pepper = process.env.BCRYPT_PASSWORD;
 const saltRounds = String(process.env.SALT_ROUNDS);
@@ -60,6 +59,7 @@ export class UserStore {
         hash
       ]);
       const user = result.rows[0];
+      console.log(typeof(user));
       conn.release();
       return user;
     } catch (err) {
