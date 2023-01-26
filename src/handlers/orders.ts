@@ -5,23 +5,33 @@ import verifyAuthToken from '../middleware/authorize';
 const store = new OrderStore;
 
 const index = async (_req: Request, res: Response) => {
-  const user_id = res.locals.jwtPayload.user.id; 
-  const orders = await store.index(user_id);
-  if(orders[0]) {
-    res.json(orders);
-  } else {
-    res.json('No orders to be seen. Check back later');
+  try {
+    const user_id = res.locals.jwtPayload.user.id; 
+    const orders = await store.index(user_id);
+    if(orders[0]) {
+      res.json(orders);
+    } else {
+      res.json('No orders to be seen. Check back later');
+    }
+  } catch (err) {
+    res.status(401);
+    res.json(`Could not display all orders. ${err}`);
   }
 }
 
 const show = async (req: Request, res: Response) => {
-  const userId = res.locals.jwtPayload.user.id;
-  const orderId = req.params.id;
-  const order = await store.show(orderId, userId);
-  if(order) {
-    res.json(order);
-  } else {
-    res.json('The requested order does not yet exist or has been deleted');
+  try {
+    const userId = res.locals.jwtPayload.user.id;
+    const orderId = req.params.id;
+    const order = await store.show(orderId, userId);
+    if(order) {
+      res.json(order);
+    } else {
+      res.json('The requested order does not yet exist or has been deleted');
+    }
+  } catch (err) {
+    res.status(401);
+    res.json(`Could not retrieve requested order ${err}`);
   }
 }
 
@@ -30,7 +40,6 @@ const create = async (req: Request, res: Response) => {
     user_id: res.locals.jwtPayload.user.id,
     order_status: req.body.order_status
   }
-  console.log(order.user_id);
   try {
     const newOrder = await store.create(order);
     res.json(newOrder);

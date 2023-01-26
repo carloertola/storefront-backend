@@ -6,21 +6,31 @@ const store = new ProductStore();
 
 // checks if products exist and sends appropriate response
 const index = async (_req: Request, res: Response) => {
-  const products = await store.index();
-  if(products[0]) {
-    res.json(products);
-  } else {
-    res.json('No products available. Please check back later');
+  try {
+    const products = await store.index();
+    if(products[0]) {
+      res.json(products);
+    } else {
+      res.json('No products available. Please check back later');
+    }
+  } catch (err) {
+    res.status(401);
+    res.json(`Could not retrieve product ${err}`);
   }
 };
 
 // retrieves id from user request and responds with the product if it exists
 const show = async (req: Request, res: Response) => {
-  const product = await store.show(req.params.id);
-  if(product) {
-    res.json(product);
-  } else {
-    res.json('The requested product does not yet exist or has been deleted');
+  try {
+    const product = await store.show(req.params.id);
+    if(product) {
+      res.json(product);
+    } else {
+      res.json('The requested product does not yet exist or has been deleted');
+    }
+  } catch (err) {
+    res.status(401);
+    res.json(`Could not retrieve specified product ${err}`);
   }
 };
 
@@ -65,15 +75,20 @@ const update = async (req: Request, res: Response) => {
 }
 
 const destroy = async (req: Request, res: Response) => {
-  if(req.params.id) {
-    const product: Product = await store.delete(req.params.id);
-    if(product) {
-      res.json(product);
+  try {
+    if(req.params.id) {
+      const product: Product = await store.delete(req.params.id);
+      if(product) {
+        res.json(product);
+      } else {
+        res.json('Product does not exist yet or has already been deleted');
+      }
     } else {
-      res.json('Product does not exist yet or has already been deleted');
+      res.json('Please provide the id of the product you want to delete')
     }
-  } else {
-    res.json('Please provide the id of the product you want to delete')
+  } catch (err) {
+    res.status(401);
+    res.json(`Could not delete product ${err}`);
   }
 }
 
