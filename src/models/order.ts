@@ -15,12 +15,12 @@ export type OrderProduct = {
 }
 
 export class OrderStore {
-  async index(id: string): Promise<Order[]> {
+  async index(userId: string): Promise<Order[]> {
     try {
       // @ts-ignore
       const conn = await sql.connect();
       const sql_query = 'SELECT * FROM orders WHERE user_id=($1)';
-      const result = await conn.query(sql_query, [id]);
+      const result = await conn.query(sql_query, [userId]);
       conn.release();
       return result.rows;
     } catch (err) {

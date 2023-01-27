@@ -59,7 +59,6 @@ export class UserStore {
         hash
       ]);
       const user = result.rows[0];
-      console.log(typeof(user));
       conn.release();
       return user;
     } catch (err) {
