@@ -40,6 +40,52 @@ describe("Order Model Methods Existence", () => {
     it("should have a completedOrders method", () => {
         expect(store.completedOrders).toBeDefined();
     });
+
+    it("create method should create a new order", async () => {
+        const result = await store.create({
+            user_id: 1,
+            order_status: 'active'
+        });
+        expect(result.order_status).toBe('active');
+    });
+
+    it("index method should list all orders", async () => {
+        const result = await store.index('1');
+        expect(result[0].order_status).toBe('active');
+    });
+
+    it("show method should return specified order", async () => {
+        const result = await store.show('1', '1');
+        expect(result.order_status).toBe('active');
+    });
+
+    it("update method should update specified order", async () => {
+        const result = await store.update({
+            id: 1,
+            user_id: 1,
+            order_status: 'complete'
+          });
+        expect(result.order_status).toEqual('complete');
+    });
+
+    it("addProduct method should add a product to order", async () => {
+        const result = await store.addProduct({
+            order_id: 1,
+            product_id: 1,
+            product_quantity: 1000
+          });
+        expect(result.product_quantity).toBe(1000);
+    });
+
+    it("completedOrders should show all completed orders", async () => {
+        const result = await store.completedOrders('1');
+        expect(result[0].user_id).toEqual('1');
+    });
+
+    it("currentOrder should retrieve the last order placed by the user", async () => {
+        const result = await store.currentOrder('1');
+        expect(result[0].order_status).toBe('active');
+    });
 });
 
 describe('Tests order endpoints', () => {

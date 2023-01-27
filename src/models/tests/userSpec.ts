@@ -11,7 +11,7 @@ const payload = {
   }
 const token: string = jwt.sign({ payload }, process.env.TOKEN_SECRET as string);
 
-describe("User Model Methods Existence", () => {
+describe("User Model Methods Existence and Database Queries", () => {
     it("should have an index method", () => {
         expect(store.index).toBeDefined();
     });
@@ -30,6 +30,40 @@ describe("User Model Methods Existence", () => {
 
     it("should have a delete method", () => {
         expect(store.delete).toBeDefined();
+    });
+
+    it("create method should create a user", async () => {
+        const result = await store.create({
+            firstName: 'Carlo',
+            lastName: 'Ertola',
+            password: 'One@Love'
+        });
+        expect(result.firstName).toBe('Carlo');
+    });
+
+    it("index method should return an array of all users if token exists", async () => {
+        const result = await store.index();
+        expect(result[0].firstName).not.toBe('Udacity');
+    });
+
+    it("show method selects specified user", async () => {
+        const result = await store.show('1');
+        expect(result.lastName).toEqual('Ertola');
+    });
+
+    it("delete method removes a specified user", async () => {
+        const result = await store.delete('1');
+        expect(result.firstName).toEqual('Carlo');
+    });
+
+    it("authenticate method returns the correct response", async () => {
+        const result = await store.authenticate({
+            id: '1',
+            firstName: 'Unknown',
+            lastName: 'Mystery',
+            password: 'One@Love'
+        });
+        expect(result).toEqual(null);
     });
 });
 
@@ -71,9 +105,9 @@ describe('Tests user endpoints', () => {
             })
     })
 
-    it('/users/:id should delete a user', () => {
+    it('should delete a user', () => {
         request
-            .delete('/api/users/1')
+            .delete('/users/1')
             .expect(200)
             .expect({
                 "firstname": "Carlo",

@@ -11,7 +11,7 @@ const payload = {
   }
 const token: string = jwt.sign({ payload }, process.env.TOKEN_SECRET as string);
 
-describe("Product Model", () => {
+describe("Product models existence and database queries testing", () => {
     it("should have an index method", () => {
         expect(store.index).toBeDefined();
     });
