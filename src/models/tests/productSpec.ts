@@ -2,6 +2,7 @@ import app from '../../server';
 import supertest from 'supertest';
 import { Product, ProductStore } from '../product';
 import jwt from 'jsonwebtoken';
+import { before } from 'node:test';
 
 const store = new ProductStore()
 const request = supertest(app);
@@ -11,7 +12,7 @@ const payload = {
   }
 const token: string = jwt.sign({ payload }, process.env.TOKEN_SECRET as string);
 
-describe("Product models existence and database queries testing", () => {
+describe("Product models existence", () => {
     it("should have an index method", () => {
         expect(store.index).toBeDefined();
     });
@@ -31,7 +32,9 @@ describe("Product models existence and database queries testing", () => {
     it("should have a delete method", () => {
         expect(store.delete).toBeDefined();
     });
+});
 
+describe("Database testing for product methods", () => {
     it("create method should add a product", async () => {
         const result = await store.create({
             name: 'full stack javascript course',
@@ -90,7 +93,7 @@ describe("Product models existence and database queries testing", () => {
             category: 'self-learning courses'
         });
     });
-});
+})
 
 describe("Tests product endpoints", () => {
     it("should test create route", async () => {
