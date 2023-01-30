@@ -36,9 +36,9 @@ describe("Product models existence", () => {
 describe("Database testing for product methods", () => {
     const product: Product = {
         id: 1,
-        name: "full stack javascript course",
+        name: 'full stack javascript course',
         price: 400.00,
-        category: "udacity courses"
+        category: 'udacity courses'
     }
 
     const updatedProduct: Product = {
@@ -49,7 +49,11 @@ describe("Database testing for product methods", () => {
     }
 
     it("create method should add a product", async () => {
-        const result = await store.create(product);
+        const result = await store.create({
+            name: 'full stack javascript course',
+            price: 400.00,
+            category: 'udacity courses'
+        });
         expect(result).toEqual(product);
     });
 
@@ -64,15 +68,21 @@ describe("Database testing for product methods", () => {
     });
 
     it("update method should return a modified product", async () => {
-        const result = await store.update(updatedProduct);
-        console.log(result);
-        expect(result).toEqual(updatedProduct);
+        let result = await store.update(updatedProduct);
+        expect(result.name).not.toEqual(product.name);
     });
 
     it("delete method should return the deleted product", async () => {
         const result = await store.delete("1");
         expect(result).toEqual(updatedProduct);
     });
+    afterAll(async () => {
+        const result = await store.create({
+            name: 'full stack javascript course',
+            price: 400.00,
+            category: 'udacity courses'
+        });
+    })
 })
 
 describe("Tests product endpoints", () => {

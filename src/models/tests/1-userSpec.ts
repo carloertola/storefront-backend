@@ -78,7 +78,7 @@ describe('Tests user endpoints', () => {
         request
             .post('/users')
             .send(user)
-            .expect('Content-Type', 'application/json')
+            .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(200)
             .then(() => {
                 request.get('/users').expect([

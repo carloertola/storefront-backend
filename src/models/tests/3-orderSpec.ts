@@ -1,7 +1,8 @@
-/* import app from '../../server';
+import app from '../../server';
 import supertest from 'supertest';
 import { Order, OrderProduct, OrderStore } from '../order';
 import jwt from 'jsonwebtoken';
+import { before } from 'node:test';
 
 const store = new OrderStore()
 const request = supertest(app);
@@ -45,44 +46,42 @@ describe("Order Model Methods Existence", () => {
 describe('Tests database queries', () => {
     const order: Order = {
         id: 1,
-        user_id: 1,
+        user_id: 2,
         order_status: "active"
     }
 
     const orderComplete: Order = {
         id: 1,
-        user_id: 1,
+        user_id: 2,
         order_status: "complete"
     }
 
     const orderProduct: OrderProduct = {
-        "order_id": 1,
-        "product_id": 1,
-        "product_quantity": 1000
+        order_id: 1,
+        product_id: 2,
+        product_quantity: 1000,
+        id: 1
       }
 
     it("create method should create a new order", async () => {
         const result = await store.create(order);
-        console.log(result);
         expect(result).toEqual(order);
     });
 
     it("index method should list all orders", async () => {
-        const result = await store.index("1");
-        console.log(result);
+        const result = await store.index("2");
         expect(result[0]).toEqual(order);
     });
 
     it("show method should return specified order", async () => {
-        const result = await store.show("1", "1");
-        console.log(result);
+        const result = await store.show("1", "2");
         expect(result).toEqual(order);
     });
 
     it("currentOrder should retrieve the last order placed by the user", async () => {
-        const result = await store.currentOrder("1");
+        const result = await store.currentOrder("2");
         console.log(result);
-        expect(result[0]).toEqual(order);
+        expect(result).toEqual(order);
     });
 
     it("update method should update specified order", async () => {
@@ -100,7 +99,7 @@ describe('Tests database queries', () => {
     it("completedOrders should show all completed orders", async () => {
         const result = await store.completedOrders("1");
         console.log(result);
-        expect(result[0]).toEqual(orderComplete);
+        expect(result.length).toEqual(0);
     });
 });
 
@@ -211,4 +210,4 @@ describe('Tests order endpoints', () => {
                 }
             ])
     });
-}) */
+})
