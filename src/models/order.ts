@@ -28,12 +28,12 @@ export class OrderStore {
     }
   }
 
-  async show(id: string, orderId: string): Promise<Order> {
+  async show(id: string, userId: string): Promise<Order> {
     try {
       // @ts-ignore
       const conn = await sql.connect();
       const sql_query = 'SELECT * FROM orders WHERE id=($1) AND user_id=($2)';
-      const result = await conn.query(sql_query, [id, orderId]);
+      const result = await conn.query(sql_query, [id, userId]);
       console.log(result);
       conn.release();
       return result.rows[0];
@@ -83,7 +83,7 @@ export class OrderStore {
     }
   }
 
-  async currentOrder(userId: string): Promise<Order[]> {
+  async currentOrder(userId: string): Promise<Order> {
     try {
       // @ts-ignore
       const conn = await sql.connect();
