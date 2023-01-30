@@ -7,7 +7,7 @@
     "prettier": "prettier --config .prettierrc.json \"src/**/*.ts\" --write",
     "lint": "eslint . --ext .ts",
     "watch": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./build/server.js\"",
-    "test": "ENV=test && npx tsc && db-migrate --env test up && jasmine && db-migrate db:drop test",
+    "test": "ENV='test' && npx tsc && db-migrate --env test up && jasmine && db-migrate db:drop test",
     "tsc": "tsc"
   },
   "repository": {
